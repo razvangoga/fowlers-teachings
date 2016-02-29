@@ -1,4 +1,11 @@
 public class CsvDataSource implements DataSource {
+  
+  private string filename;
+  
+  public CsvDataSource(String filename) {
+    this.filename = filename;
+  }    
+    
   public Stream<SalesRecord> salesDataFor(String product, LocalDate start, LocalDate end) {
     // unimportant details
   }

@@ -1,5 +1,5 @@
-function salesDataFor(product, start, end) {
-    return salesData()
+function salesDataFor(product, start, end, fileName) {
+    return salesData(fileName)
         .filter(r =>
             (r.product === product)
             && (new Date(r.date) >= start)
@@ -7,14 +7,14 @@ function salesDataFor(product, start, end) {
             );
 }
 
-function recordCounts(start) {
-    return salesData()
+function recordCounts(start, fileName) {
+    return salesData(fileName)
         .filter(r => new Date(r.date) >= start)
         .length;
 }
 
-function salesData() {
-    const data = readFileSync('sales.csv', { encoding: 'utf8' });
+function salesData(fileName) {
+    const data = readFileSync(fileName, { encoding: 'utf8' });
     return data
         .split('\n')
         .slice(1)
