@@ -8,6 +8,6 @@ export default function () {
     locator.initialize({
         salesDataFor: dataSource.salesDataFor,
         recordCounts: dataSource.recordCounts,
-        gondorffNumber: gondorffImpl
+        gondorffNumber: (product) => gondorffImpl(product, dataSource.salesDataFor, dataSource.recordCounts)
     });
 }

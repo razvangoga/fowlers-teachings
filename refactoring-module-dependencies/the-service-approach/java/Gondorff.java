@@ -1,6 +1,12 @@
 public class Gondorff {
+  private DataSource dataSource;
+
+  public Gondorff(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
+      
   public double gondorffNumber(String product) {
-    return  ServiceLocator.dataSource.salesDataFor(product, gondorffEpoch(product), hookerExpiry())
+    return  dataSource.salesDataFor(product, gondorffEpoch(product), hookerExpiry())
             .filter(r -> r.getDate().toString().matches(".*01$"))
             .findFirst()
             .get()
@@ -8,7 +14,7 @@ public class Gondorff {
   }
   
   private LocalDate gondorffEpoch(String product) {
-    final long countingBase = ServiceLocator.dataSource.recordCounts(baselineRange(product));
+    final long countingBase = dataSource.recordCounts(baselineRange(product));
     return deriveEpoch(countingBase);
   }
 

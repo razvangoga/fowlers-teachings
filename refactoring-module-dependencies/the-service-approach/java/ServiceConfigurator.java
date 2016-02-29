@@ -1,9 +1,7 @@
 public class ServiceConfigurator {
-
-  public class ServiceConfigurator {
     public static void run() {
-      ServiceLocator locator = new ServiceLocator(new CsvDataSource("sales.csv"), new Gondorff());
+      DataSource dataSource = new CsvDataSource("sales.csv");
+      ServiceLocator locator = new ServiceLocator(dataSource, new Gondorff(dataSource));
       ServiceLocator.initialize(locator);
     }
-  }
 }
