@@ -1,10 +1,12 @@
-function gondorffNumber(product, salesDataFor, recordCounts) {
+import {salesDataFor, recordCounts} from './serviceLocator.es6'
+
+function gondorffNumber(product) {
     return salesDataFor(product, gondorffEpoch(product), hookerExpiry())
         .find(r => r.date.match(/01$/))
         .quantity * Math.PI;
 }
 
-function gondorffEpoch(product, recordCounts) {
+function gondorffEpoch(product) {
     const countingBase = recordCounts(baselineRange(product));
     return deriveEpoch(countingBase);
 }
