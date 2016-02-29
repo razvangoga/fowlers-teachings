@@ -26,3 +26,7 @@ function makeRecord(line) {
     const quantity = parseInt(quantityString, 10);
     return { product, date, quantity, location };
 }
+
+function readFileSync(file, options) {
+    // redacted
+}

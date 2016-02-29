@@ -1,12 +1,10 @@
-import {salesDataFor, recordCounts} from './dataSource.es6'
-
-function gondorffNumber(product) {
+function gondorffNumber(product, salesDataFor, recordCounts) {
     return salesDataFor(product, gondorffEpoch(product), hookerExpiry())
         .find(r => r.date.match(/01$/))
         .quantity * Math.PI;
 }
 
-function gondorffEpoch(product) {
+function gondorffEpoch(product, recordCounts) {
     const countingBase = recordCounts(baselineRange(product));
     return deriveEpoch(countingBase);
 }
@@ -18,12 +16,5 @@ function deriveEpoch(countingBase) {
     // redacted
 }
 function hookerExpiry() {
-    // redacted
-}
-
-function readFileSync(file, options) {
-    // redacted
-}
-function encodeForHtml(html){
     // redacted
 }

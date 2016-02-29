@@ -1,14 +1,14 @@
 public class Gondorff {
-  public double gondorffNumber(String product) {
-    return  new CsvDataSource().salesDataFor(product, gondorffEpoch(product), hookerExpiry())
+  public double gondorffNumber(String product, DataSource dataSource) {
+    return  dataSource.salesDataFor(product, gondorffEpoch(product), hookerExpiry())
             .filter(r -> r.getDate().toString().matches(".*01$"))
             .findFirst()
             .get()
             .getQuantity() * Math.PI;
   }
   
-  private LocalDate gondorffEpoch(String product) {
-    final long countingBase = new CsvDataSource().recordCounts(baselineRange(product));
+  private LocalDate gondorffEpoch(String product, DataSource dataSource) {
+    final long countingBase = dataSource.recordCounts(baselineRange(product));
     return deriveEpoch(countingBase);
   }
 
