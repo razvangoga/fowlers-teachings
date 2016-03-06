@@ -1,11 +1,7 @@
 import getModel from './recommendationModel.es6'
 
 export default function (spec) {
-    let result = [];
-
-    result = result.concat(executeModel(spec, getModel()));
-
-    return _.uniq(result);
+    return executeModel(spec, getModel());
 }
 
 function seasonIncludes(spec, arg) {
@@ -17,12 +13,8 @@ function countryIncludedIn(spec, anArray) {
 }
 
 function pickMinDuration(spec, range) {
-    if (spec.minDuration) {
-        return pickFromRange(range, spec.minDuration);
-    } else {
-        //return an empty array for the cases where minDuration is not specified
-        return [];
-    }
+    //return an empty array for the cases where minDuration is not specified
+    return (spec.minDuration) ? pickFromRange(range, spec.minDuration) : [];
 }
 
 function pickFromRange(range, value) {
@@ -35,6 +27,7 @@ function executeModel(spec, model) {
         .filter((r) => isActive(r, spec))
         .map((r) => result(r, spec))
         .flatten()
+        .unique()
         .value();
 }
 
