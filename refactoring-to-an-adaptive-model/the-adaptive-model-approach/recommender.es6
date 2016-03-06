@@ -3,17 +3,27 @@ import getModel from './recommendationModel.es6'
 export default function (spec) {
     let result = [];
 
+    const summerPicks = [
+        [150, null],
+        [350, 'white lightening'],
+        [570, 'little master'],
+        [Infinity, 'wall']
+    ];
+
+    const nonSummerPicks = [
+        [150, null],
+        [450, 'white lightening'],
+        [Infinity, 'little master']
+    ];
+
     result = result.concat(executeModel(spec, getModel()));
 
     if (spec.minDuration >= 150) {
         if (seasonIncludes("summer")) {
-            if (spec.minDuration < 350) result.push("white lightening");
-            else if (spec.minDuration < 570) result.push("little master");
-            else result.push("wall");
+            result.push(pickFromRange(summerPicks, spec.minDuration));
         }
         else {
-            if (spec.minDuration < 450) result.push("white lightening");
-            else result.push("little master");
+            result.push(pickFromRange(nonSummerPicks, spec.minDuration));
         }
     }
     return _.uniq(result);
@@ -25,6 +35,11 @@ function seasonIncludes(spec, arg) {
 
 function countryIncludedIn(spec, anArray) {
     return anArray.includes(spec.country);
+}
+
+function pickFromRange(range, value) {
+    const matchIndex = range.findIndex((r) => value < r[0]);
+    return range[matchIndex][1];
 }
 
 function executeModel(spec, model) {
