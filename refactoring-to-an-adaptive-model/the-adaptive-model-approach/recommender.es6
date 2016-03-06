@@ -4,28 +4,27 @@ export default function (spec) {
     let result = [];
 
     const summerPicks = [
-        [150, null],
+        [150, []],
         [350, 'white lightening'],
         [570, 'little master'],
         [Infinity, 'wall']
     ];
 
     const nonSummerPicks = [
-        [150, null],
+        [150, []],
         [450, 'white lightening'],
         [Infinity, 'little master']
     ];
 
     result = result.concat(executeModel(spec, getModel()));
 
-    if (spec.minDuration >= 150) {
-        if (seasonIncludes("summer")) {
-            result.push(pickFromRange(summerPicks, spec.minDuration));
-        }
-        else {
-            result.push(pickFromRange(nonSummerPicks, spec.minDuration));
-        }
+    if (seasonIncludes("summer")) {
+        result = result.concat(pickMinDuration(summerPicks, spec.minDuration));
     }
+    else {
+        result = result.concat(pickMinDuration(nonSummerPicks, spec.minDuration));
+    }
+
     return _.uniq(result);
 }
 
@@ -37,15 +36,26 @@ function countryIncludedIn(spec, anArray) {
     return anArray.includes(spec.country);
 }
 
+function pickMinDuration(spec, range) {
+    if (spec.minDuration) {
+        return pickFromRange(range, spec.minDuration);
+    } else {
+        //return an empty array for the cases where minDuration is not specified
+        return [];
+    }
+}
+
 function pickFromRange(range, value) {
     const matchIndex = range.findIndex((r) => value < r[0]);
     return range[matchIndex][1];
 }
 
 function executeModel(spec, model) {
-    return model
+    return _.chain(model)
         .filter((r) => isActive(r, spec))
         .map((r) => r.result)
+        .flatten()
+        .value();
 }
 function isActive(rule, spec) {
     if (rule.condition === 'atNight')
