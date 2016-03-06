@@ -48,9 +48,13 @@ function executeModel(spec, model) {
 }
 
 function result(r, spec) {
-    if (r.result) return r.result;
-    else if (r.resultFunction === 'pickMinDuration')
+    if (r.result === "value")
+        return r.resultArgs[0];
+    
+    if (r.resultFunction === 'pickMinDuration')
         return pickMinDuration(spec, r.resultArgs[0]);
+        
+    throw new Error("unknown result function: " + r.result);        
 }
 
 function isActive(rule, spec) {
