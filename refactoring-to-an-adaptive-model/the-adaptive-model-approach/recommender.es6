@@ -3,13 +3,6 @@ import getModel from './recommendationModel.es6'
 export default function (spec) {
     let result = [];
 
-    const summerPicks = [
-        [150, []],
-        [350, 'white lightening'],
-        [570, 'little master'],
-        [Infinity, 'wall']
-    ];
-
     const nonSummerPicks = [
         [150, []],
         [450, 'white lightening'],
@@ -18,12 +11,8 @@ export default function (spec) {
 
     result = result.concat(executeModel(spec, getModel()));
 
-    if (seasonIncludes("summer")) {
-        result = result.concat(pickMinDuration(summerPicks, spec.minDuration));
-    }
-    else {
+    if (!seasonIncludes("summer"))
         result = result.concat(pickMinDuration(nonSummerPicks, spec.minDuration));
-    }
 
     return _.uniq(result);
 }
@@ -53,10 +42,17 @@ function pickFromRange(range, value) {
 function executeModel(spec, model) {
     return _.chain(model)
         .filter((r) => isActive(r, spec))
-        .map((r) => r.result)
+        .map((r) => result(r, spec))
         .flatten()
         .value();
 }
+
+function result(r, spec) {
+    if (r.result) return r.result;
+    else if (r.resultFunction === 'pickMinDuration')
+        return pickMinDuration(spec, r.resultArgs[0]);
+}
+
 function isActive(rule, spec) {
     if (rule.condition === 'atNight')
         return spec.atNight;
@@ -69,6 +65,9 @@ function isActive(rule, spec) {
 
     if (rule.condition === 'and')
         return rule.conditionArgs.every((arg) => isActive(arg, spec));
+
+    if (rule.condition === 'pickMinDuration')
+        return true;
 
     throw new Error("unable to handle " + rule.condition);
 }
