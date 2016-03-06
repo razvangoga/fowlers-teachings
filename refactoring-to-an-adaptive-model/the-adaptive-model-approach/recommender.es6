@@ -1,6 +1,10 @@
+import getModel from './recommendationModel.es6'
+
 export default function (spec) {
     let result = [];
-    if (spec.atNight) result.push("whispering death");
+
+    result = result.concat(executeModel(spec));
+
     if (spec.seasons && spec.seasons.includes("winter")) result.push("beefy");
     if (spec.seasons && spec.seasons.includes("summer")) {
         if (["sparta", "atlantis"].includes(spec.country)) result.push("white lightening");
@@ -17,4 +21,15 @@ export default function (spec) {
         }
     }
     return _.uniq(result);
+}
+
+function executeModel(spec) {
+    return getModel()
+        .filter((r) => isActive(r, spec))
+        .map((r) => r.result)
+}
+function isActive(rule, spec) {
+    if (rule.condition === 'atNight') 
+        return spec.atNight;
+    throw new Error("unable to handle " + rule.condition);
 }
